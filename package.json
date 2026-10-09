@@ -1,0 +1,6 @@
+{
+  "name": "secondshelf", "version": "0.1.0", "private": true, "type": "module", "license": "MIT",
+  "description": "A librarian-controlled cultural discovery agent with honest sample mode and a real Qloo adapter",
+  "engines": { "node": ">=22.19.0" },
+  "scripts": { "start": "node src/server.js", "dev": "node --watch src/server.js", "test": "node --test", "check": "node --check src/server.js && node --check src/planner.js && node --check src/qloo.js && node --check public/app.js" }
+}
