@@ -2,6 +2,8 @@
 
 A library discovery tool that turns volunteered film, artist and book favourites into a librarian-approved reading list **from stock that is actually available**.
 
+Public MIT source: [Vcode2407/qloo-secondshelf](https://github.com/Vcode2407/qloo-secondshelf). [Automated local checks](https://github.com/Vcode2407/qloo-secondshelf/actions) run on Windows and Ubuntu; controlled provider responses do not verify live Qloo.
+
 The local application works end to end without an account or API key. Its default sample mode uses authored fixtures and synthetic tag overlap. **Those matches, scores and rankings are not Qloo data.** A real Qloo adapter is implemented separately and requires an event credential plus an explicit choice of Qloo mode. No live provider calls have been verified, and this local build is **not yet a qualifying hackathon submission**.
 
 ## Run on Windows
@@ -29,7 +31,7 @@ See [DEMO.md](DEMO.md) for a short walkthrough and failure cases.
 
 ## Connect real Qloo access
 
-Request a hackathon key through the [official developer guide](https://docs.qloo.com/reference/qloo-llm-hackathon-developer-guide). Keys are manually provisioned, usually within a few business days. No sponsor access is assumed.
+The participant approved the two required agreements, and the official hackathon key-request form confirmed receipt on **October 10, 2026**. An issued key is still pending. Keys are manually provisioned, usually within a few business days. New participants can request access through the [official developer guide](https://docs.qloo.com/reference/qloo-llm-hackathon-developer-guide). No live sponsor access is assumed.
 
 ```powershell
 Copy-Item .env.example .env
