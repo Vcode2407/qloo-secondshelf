@@ -1,6 +1,6 @@
 # SecondShelf — English Devpost description draft
 
-Prepared October 10, 2026. SecondShelf is a working local sample agent with an implemented Qloo adapter. Live Qloo access, a public functional demo, a public repository, and submission remain pending. The authored sample matches and rankings are not Qloo data.
+Prepared October 10, 2026; source and deployment evidence refreshed October 11. SecondShelf is a working sample agent with an implemented Qloo adapter, a [published MIT repository](https://github.com/Vcode2407/qloo-secondshelf), and a verified owner-private hosted sample workflow. Live Qloo access, externally usable judge access, and submission remain pending. The authored sample matches and rankings are not Qloo data.
 
 ## Project name and tagline
 
@@ -52,15 +52,17 @@ The adapter bounds calls and timeouts. Provider failures, unknown or duplicate r
 
 The local product is complete enough to prepare, refine, approve, export, and reopen a reading list. The current automated suite contains 39 passing tests: 26 root application tests and 13 hosted capsule/workflow/quota/provider-stream regressions. They cover the actual HTTP workflow, restart persistence, reviewed identities, provider boundaries, provenance, exports, refinements, and recovery. UTF-8 favourites survive transport chunks, while malformed UTF-8 and malformed favourite rows are rejected before provider requests in both local and hosted routes. Both provider adapters enforce a 1,500,000-byte streamed-response cap, cancel oversized bodies before reading their remaining tail, and decode UTF-8 strictly. Injected tests cover split characters, a valid literal replacement character, the exact limit, sanitized stream failures and preserved hosted quota HTTP 429; they do not prove live Qloo use. The root checks also cover atomic replacement/approval conflicts during delayed refinements. Approved drafts cannot be refined; changes require a new list. Syntax checks pass.
 
+The published source checkpoint `d1a20d8c24e5e6e8fdf1a082bfd5f82f65628f65` passed [GitHub CI](https://github.com/Vcode2407/qloo-secondshelf/actions/runs/38157794507) on October 11. The 39 distinct tests passed on both Ubuntu and Windows; the separate hosted job also passed its 13-test subset and built the Worker. The repeated hosted subset is not added to the total. The [latest private deployment evidence](HOSTED_STREAM_SAFETY_DEPLOYMENT.json) records 13 actual cloud sample/input-validation requests with `qlooConfigured: false`; injected provider tests and cloud sample evidence do not establish a live Qloo integration.
+
 The implementation demonstrates that agentic orchestration can be deterministic and still carry out a meaningful sequence of tools and decisions. It also shows why recommendation provenance needs the reviewed identity and actual returned order, not just a score next to a title.
 
 ## Limits and next steps
 
 The catalogue, copy counts, sample favourites, and sample cultural tags are fictional demonstration data. There is no library-system connection or live patron data. Qloo's aggregate cultural affinities are not proof of an individual's preferences or identity. Entity editions, coverage, response details, and quotas need verification with the event-issued credential.
 
-The local Node server uses loopback Host/Origin checks. A separate hosted Worker is deployed owner-private, with backend-signed review capsules, atomic draft-state changes, browser-local saved lists and conservative network/global quotas. Its actual cloud sample workflow passed resolution, planning, refinement, approval and stale/repeated-approval rejection. Public audience and an issued-key Qloo workflow remain pending; private sample execution does not satisfy the event's real Qloo use or public functional-demo gate. See [the deployment evidence](HOSTED_EVIDENCE.md).
+The local Node server uses loopback Host/Origin checks. A separate hosted Worker is deployed owner-private, with backend-signed review capsules, atomic draft-state changes, browser-local saved lists and conservative network/global quotas. Its actual cloud sample workflow passed resolution, planning, refinement, approval and stale/repeated-approval rejection. Public publication, signed-out workflow verification and an issued-key Qloo workflow remain pending. The [Overview's external-hosting requirement](https://qloo.devpost.com/) excludes local-only/private-access entries, while [Rules section 4, Testing](https://qloo.devpost.com/rules) provides for private websites with login credentials. That discrepancy needs clarification before relying on a private-login alternative; this owner-only Site has no verified judge-access path. Private sample execution does not establish real Qloo use. See [the deployment evidence](HOSTED_EVIDENCE.md).
 
-Next steps are to obtain an attributable event key, verify a small live shelf end to end, retain redacted evidence, demonstrate Qloo's actual effect on the list, and publish the functional application and licensed source. Customer validation and a real inventory connector belong to later product work.
+Next steps are to obtain an attributable event key, verify a small live shelf end to end, retain redacted evidence, demonstrate Qloo's actual effect on the list, and fully publish the hosted functional application with verified judge access. The licensed source is already public. Customer validation and a real inventory connector belong to later product work.
 
 ## Demo outline — optional 2 minutes 40 seconds
 
@@ -85,7 +87,7 @@ For a later verified live demo, replace the sample resolution/ranking scene with
 | English product description | Draft above; review before pasting. |
 | Built with | JavaScript, Node.js, HTML/CSS, deterministic orchestration, local JSON; Qloo search/Insights adapter implemented, live use pending. |
 | Public licensed repository | https://github.com/Vcode2407/qloo-secondshelf; MIT license, lockfile, root and hosted source, setup and tests are available. |
-| External functional demo | URL and reviewed public credential/quota handling pending. Local `http://127.0.0.1:4182` is not a public demo link. |
+| External functional demo | Hosted owner-private URL: https://secondshelf-library.viku355.chatgpt.site. Reviewed credential/quota handling, public publication and signed-out judge access remain pending; do not treat this as the qualifying demo yet. Local `http://127.0.0.1:4182` is not an external demo link. |
 | Real Qloo access and runtime evidence | Event key, actual calls, reviewed entity/edition matches, coverage, quotas, and redacted provenance pending. |
 | Judge access | Arrange free usable access through November 16, 2026, 11:45 pm EST / November 17, 10:15 am IST. |
 | Screenshots or optional video | Local sample walkthrough available; final assets/links pending. |
