@@ -47,3 +47,24 @@ On **October 11, 2026**, the final canonical source at `5597c34d638ddfe25262f606
 The full native-plus-hosted suite passes **39 tests: 26 native tests and 13 hosted tests**. Both Qloo adapters cap streamed responses at **1,500,000 bytes**, cancel an oversized stream before reading its remaining tail and reject malformed UTF-8 without silently replacing bytes. Tests preserve valid multibyte characters split across chunks and valid literal replacement characters. Hosted tests additionally check exact-limit acceptance, sanitized stream/cancellation failures and unchanged HTTP 429 from the quota-aware fetch wrapper. Native syntax checks pass; the identical canonical Worker source has a successful local five-stage build.
 
 These are local checks with injected provider responses. No live Qloo request or credential is involved, and local checks do not establish deployment of this repair, public-audience access, actual provider coverage or hackathon qualification. Existing cloud evidence remains tied to its recorded source/version/deployment IDs above; new deployment results must be recorded separately after verification.
+
+## Private deployment of the streamed-response repair
+
+The final canonical source `5597c34d638ddfe25262f606cfa1ca7cd34a8efd` was privately deployed successfully on **October 11, 2026 at 22:26:16 IST** (`2026-10-11T16:56:16.531158+00:00`). Saved version: `appgprj_6aca7d5e0ae881919134c388de998984~appgver_66ae6e99075c819195ef5dd6d5a8e5c1`. Deployment: `appgdep_6acbbf91a4108191868b4681501b0104`, status `succeeded`, environment revision 1. The production URL remains https://secondshelf-library.viku355.chatgpt.site and the audience remains **owner-private**.
+
+At **22:27:44 IST** (`2026-10-11T16:57:44.471Z`), the actual deployed Worker/D1 sample workflow passed a 13-request HTTPS check through the owner-private service boundary:
+
+| Actual cloud check | Observed result |
+| --- | --- |
+| Status and inventory | 200; Qloo unconfigured. |
+| Null, array and string favourites | 400 for each. |
+| Invalid UTF-8 in JSON | 400; malformed bytes rejected. |
+| Valid literal Unicode replacement character | 200; query preserved. |
+| Sample resolve, plan and refinement | 200. |
+| Approve superseded original draft | 409. |
+| Approve refined draft | 200; The Martian, A Wizard of Earthsea and The Hobbit, excluding Dune. |
+| Repeat approval | 409. |
+
+The sanitized [deployment and cloud-check evidence](HOSTED_STREAM_SAFETY_DEPLOYMENT.json) contains the exact request/status record and source/version/deployment metadata, with no credentials, signed capsule tokens or visitor data. The probe used fictional sample inputs, selected sample mode with Qloo unconfigured and requested no live-provider operation. Provider calls were not instrumented; the observed count remains null rather than a claimed zero.
+
+This verifies private deployment and the sample/input-guard workflow. The **provider-response byte cap, early cancellation and strict response UTF-8 checks remain verified by injected local tests**; this cloud probe did not exercise a live Qloo response. An issued key, actual Qloo cultural evidence, public-audience access and signed-out judge use remain pending. No Devpost entry is submitted.

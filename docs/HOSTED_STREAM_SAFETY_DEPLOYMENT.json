@@ -1,0 +1,97 @@
+{
+  "verifiedAtUtc": "2026-10-11T16:57:44.471Z",
+  "origin": "https://secondshelf-library.viku355.chatgpt.site",
+  "access": "owner-private service access",
+  "mode": "sample",
+  "qlooConfigured": false,
+  "liveProviderRequested": false,
+  "providerCallsObserved": null,
+  "malformedSeedCases": [
+    {
+      "label": "null",
+      "status": 400
+    },
+    {
+      "label": "array",
+      "status": 400
+    },
+    {
+      "label": "string",
+      "status": 400
+    }
+  ],
+  "malformedUtf8Rejected": true,
+  "validLiteralReplacementCharacterPreserved": true,
+  "requests": [
+    {
+      "path": "/api/status",
+      "status": 200
+    },
+    {
+      "path": "/api/inventory",
+      "status": 200
+    },
+    {
+      "path": "/api/resolve",
+      "status": 400
+    },
+    {
+      "path": "/api/resolve",
+      "status": 400
+    },
+    {
+      "path": "/api/resolve",
+      "status": 400
+    },
+    {
+      "path": "/api/resolve",
+      "status": 400
+    },
+    {
+      "path": "/api/resolve",
+      "status": 200
+    },
+    {
+      "path": "/api/resolve",
+      "status": 200
+    },
+    {
+      "path": "/api/plans",
+      "status": 200
+    },
+    {
+      "path": "/api/refine",
+      "status": 200
+    },
+    {
+      "path": "/api/approve",
+      "status": 409
+    },
+    {
+      "path": "/api/approve",
+      "status": 200
+    },
+    {
+      "path": "/api/approve",
+      "status": 409
+    }
+  ],
+  "approvedTitles": [
+    "The Martian",
+    "A Wizard of Earthsea",
+    "The Hobbit"
+  ],
+  "excludedId": "dune",
+  "schemaVersion": 1,
+  "oldDraftAndReplayRejected": true,
+  "sourceSha": "5597c34d638ddfe25262f606cfa1ca7cd34a8efd",
+  "projectId": "appgprj_6aca7d5e0ae881919134c388de998984",
+  "savedVersionId": "appgprj_6aca7d5e0ae881919134c388de998984~appgver_66ae6e99075c819195ef5dd6d5a8e5c1",
+  "deploymentId": "appgdep_6acbbf91a4108191868b4681501b0104",
+  "deploymentStatus": "succeeded",
+  "deploymentUpdatedAtUtc": "2026-10-11T16:56:16.531158+00:00",
+  "environmentRevision": 1,
+  "audience": "owner-private",
+  "providerCallsInstrumented": false,
+  "streamedProviderResponseVerification": "Injected local tests only; this cloud probe requested sample mode with Qloo unconfigured."
+}
