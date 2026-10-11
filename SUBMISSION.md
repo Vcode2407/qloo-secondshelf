@@ -1,6 +1,6 @@
 # Qloo submission checklist
 
-**Current state: working local sample planner, implemented Qloo adapter and [public MIT repository](https://github.com/Vcode2407/qloo-secondshelf). The approved API-key request was received on October 10, 2026. No issued key, verified live Qloo call, public functional demo or submitted entry yet.**
+**Current state: working local sample planner, implemented Qloo adapter, [public MIT repository](https://github.com/Vcode2407/qloo-secondshelf), and a successfully deployed owner-private [hosted demo](https://secondshelf-library.viku355.chatgpt.site). The approved API-key request was received on October 10, 2026. No issued key, verified live Qloo call, public audience or submitted entry yet.**
 
 Deadline: **October 31, 2026, 9:15 am IST** (October 30, 11:45 pm EDT). [Official schedule](https://qloo.devpost.com/details/dates)
 
@@ -10,6 +10,7 @@ Deadline: **October 31, 2026, 9:15 am IST** (October 30, 11:45 pm EDT). [Officia
 - [x] Backend-only credential handling and bounded explicit calls.
 - [x] MIT license, reproducible setup, lockfile, demo walkthrough and meaningful tests.
 - [x] Submit the event API-key request with participant-approved use agreement and rules; receipt confirmed October 10, 2026.
+- [x] Deploy the reviewed hosted Worker with signed review capsules, atomic draft-state transitions, credential-free browser assets and conservative action/provider quotas. Repaired native deployment succeeded October 11; audience remains owner-private. [Actual private cloud sample workflow](docs/HOSTED_EVIDENCE.md) passed, including superseded/repeated-approval rejection.
 - [ ] Receive an event-issued, individually attributable Qloo credential.
 - [ ] Verify real API response shapes, book coverage and quotas end to end using that key.
 - [ ] Demonstrate that Qloo materially changes the available-stock reading list, beyond what a generic language model could invent.

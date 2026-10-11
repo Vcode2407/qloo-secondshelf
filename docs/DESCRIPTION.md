@@ -58,7 +58,7 @@ The implementation demonstrates that agentic orchestration can be deterministic 
 
 The catalogue, copy counts, sample favourites, and sample cultural tags are fictional demonstration data. There is no library-system connection or live patron data. Qloo's aggregate cultural affinities are not proof of an individual's preferences or identity. Entity editions, coverage, response details, and quotas need verification with the event-issued credential.
 
-The current server is localhost-only, with local Host/Origin checks and no public hosting. A public deployment needs reviewed credential/quota controls and free, usable judge access. A successful local sample run does not satisfy the event's required real Qloo use or externally published functional-demo gate.
+The local Node server uses loopback Host/Origin checks. A separate hosted Worker is deployed owner-private, with backend-signed review capsules, atomic draft-state changes, browser-local saved lists and conservative network/global quotas. Its actual cloud sample workflow passed resolution, planning, refinement, approval and stale/repeated-approval rejection. Public audience and an issued-key Qloo workflow remain pending; private sample execution does not satisfy the event's real Qloo use or public functional-demo gate. See [the deployment evidence](HOSTED_EVIDENCE.md).
 
 Next steps are to obtain an attributable event key, verify a small live shelf end to end, retain redacted evidence, demonstrate Qloo's actual effect on the list, and publish the functional application and licensed source. Customer validation and a real inventory connector belong to later product work.
 

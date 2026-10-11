@@ -4,6 +4,8 @@ A library discovery tool that turns volunteered film, artist and book favourites
 
 Public MIT source: [Vcode2407/qloo-secondshelf](https://github.com/Vcode2407/qloo-secondshelf). [Automated local checks](https://github.com/Vcode2407/qloo-secondshelf/actions) run on Windows and Ubuntu; controlled provider responses do not verify live Qloo.
 
+The [hosted Worker source and setup](hosting/README.md) reproduce the same workflow with browser-local saved lists, signed reviewed-state capsules, D1 draft-state checks and bounded public-demo quotas. The repaired build was successfully deployed at https://secondshelf-library.viku355.chatgpt.site on October 11, 2026; its first deployment was October 10. An actual private cloud check passed resolution, planning, refinement, approval and stale/repeated-approval rejection. See [deployment evidence](docs/HOSTED_EVIDENCE.md) and the [dependency review](hosting/SECURITY.md). Its audience remains **owner-private**; a private deployment does not meet Qloo's public-demo requirement. No event key or live Qloo result is verified yet.
+
 The local application works end to end without an account or API key. Its default sample mode uses authored fixtures and synthetic tag overlap. **Those matches, scores and rankings are not Qloo data.** A real Qloo adapter is implemented separately and requires an event credential plus an explicit choice of Qloo mode. No live provider calls have been verified, and this local build is **not yet a qualifying hackathon submission**.
 
 ## Run on Windows
@@ -16,7 +18,7 @@ npm test
 npm start
 ```
 
-Open [http://127.0.0.1:4182](http://127.0.0.1:4182). There are no external package dependencies, remote fonts or images. `npm ci` consumes the checked-in lockfile. Stop the server with Ctrl+C. `npm run check` checks JavaScript syntax. `npm run dev` restarts the server after source changes.
+Open [http://127.0.0.1:4182](http://127.0.0.1:4182). The local Node application has no external package dependencies, remote fonts or images; the separate hosted build has its own pinned dependencies. `npm ci` consumes the root lockfile. Stop the server with Ctrl+C. `npm run check` checks JavaScript syntax. `npm run dev` restarts the server after source changes.
 
 ## A useful workflow now
 
@@ -84,11 +86,11 @@ The saved evidence includes the normalized search candidates, reviewed selection
 
 `data/library.json` holds drafts and approved lists, including their reviewed selection, criteria and credential-free evidence. It is written atomically and preserves approved lists across a restart. Drafts are capped at 100 retained entries; pending match reviews are capped at 100 and expire after 30 minutes. Older live records without saved evidence are labelled incomplete and cannot be approved or refined; resolve and review a fresh draft. To reset a demonstration, stop the server and **rename** `data/` to a backup directory before restarting. Exported CSV labels its evidence mode and escapes formula-leading values.
 
-The server binds to `127.0.0.1`, validates the local Host and browser Origin, accepts bounded JSON requests, and serves only an explicit static-file allowlist. This is a local application. External publication will require a separately reviewed deployment configuration and appropriate public-demo credential/quota controls; no public hosting is claimed or configured.
+The local Node server binds to `127.0.0.1`, validates the local Host and browser Origin, accepts bounded JSON requests, and serves only an explicit static-file allowlist. Its JSON file store remains local. A separately reviewed [hosted Worker](hosting/README.md) uses browser-local saved records, signed review capsules, atomic D1 draft-state changes and explicit action/provider quotas. It is deployed owner-private; public audience and actual Qloo verification remain pending.
 
 ## Verification
 
-`npm test` runs **20 tests** covering:
+`npm test` runs **26 tests**: 20 local planner/provider tests plus 6 hosted capsule/workflow/quota regressions. They cover:
 
 - Complete HTTP planning, explicit approval, CSV and persistence across a real server restart.
 - Mandatory reviewed IDs, unresolved favourites, inventory availability, category/exclusion refinements and superseded drafts.
@@ -104,7 +106,7 @@ Provider fixtures are **stubs**, not live Qloo validation. Browser workflow chec
 
 Qloo's deadline is **October 30, 2026, 11:45 pm EDT / October 31, 2026, 9:15 am IST**. The public event requires a real Qloo-powered application, an externally published functional demo, a public repository with visible open-source license, and an English project description. Video is optional. [Official overview](https://qloo.devpost.com/), [schedule](https://qloo.devpost.com/details/dates), [rules](https://qloo.devpost.com/rules).
 
-Do not claim eligibility or a completed entry yet. The remaining gates are recorded in [SUBMISSION.md](SUBMISSION.md). Entrant age, residence, conflicts and rights still need verification; API access, live data coverage and external hosting remain pending. Sponsor documentation contains a malformed pre-existing-project clause, so document the original development period and obtain clarification if relying on prior work.
+Do not claim eligibility or a completed entry yet. The remaining gates are recorded in [SUBMISSION.md](SUBMISSION.md). Entrant age, residence, conflicts and rights still need verification; API access, live data coverage and public demo access remain pending. Sponsor documentation contains a malformed pre-existing-project clause, so document the original development period and obtain clarification if relying on prior work.
 
 ## License
 

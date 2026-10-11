@@ -1,0 +1,51 @@
+{
+  "verifiedAtUtc": "2026-10-11T07:30:59.323Z",
+  "origin": "https://secondshelf-library.viku355.chatgpt.site",
+  "access": "owner-private service access",
+  "mode": "sample",
+  "qlooConfigured": false,
+  "liveProviderRequested": false,
+  "providerCallsObserved": null,
+  "requests": [
+    {
+      "path": "/api/status",
+      "status": 200
+    },
+    {
+      "path": "/api/inventory",
+      "status": 200
+    },
+    {
+      "path": "/api/resolve",
+      "status": 200
+    },
+    {
+      "path": "/api/plans",
+      "status": 200
+    },
+    {
+      "path": "/api/refine",
+      "status": 200
+    },
+    {
+      "path": "/api/approve",
+      "status": 409
+    },
+    {
+      "path": "/api/approve",
+      "status": 200
+    },
+    {
+      "path": "/api/approve",
+      "status": 409
+    }
+  ],
+  "approvedTitles": [
+    "The Martian",
+    "A Wizard of Earthsea",
+    "The Hobbit"
+  ],
+  "excludedId": "dune",
+  "schemaVersion": 1,
+  "oldDraftAndReplayRejected": true
+}
