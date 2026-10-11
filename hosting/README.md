@@ -16,6 +16,8 @@ node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1
 npm start -- --port 4192
 ```
 
+The seven hosted tests cover capsule integrity/expiry, the reviewed sample workflow, HTTP input boundaries, malformed favourite values, strict UTF-8 handling, approval replay and shared quota protection. Invalid UTF-8 bytes and null/primitive/array favourites return HTTP 400 before provider dispatch; a valid literal Unicode replacement character is preserved.
+
 After each build, create an ignored `dist/server/.dev.vars` beside the generated Wrangler configuration with `SECONDSHELF_STATE_SECRET` set to a unique random value of at least 32 characters. Only add `QLOO_API_KEY` when the event credential has been issued. Hosted values belong in the Sites secret manager; they are never in browser code, a manifest or source. Do not run `prepare-secondshelf.py` again without first restoring the four original core modules and frontend files; it is a one-time port script, not a build step. The owned local core was ported from public source commit `8c5c9fe`, with an in-memory store and preservation of quota errors in the hosted provider adapter.
 
 ## Public-demo boundaries

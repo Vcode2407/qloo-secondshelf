@@ -7,7 +7,7 @@ Use the running local application at `http://127.0.0.1:4182`. This script demons
 3. Press **Use the sample briefing**. It selects six available books and uses Interstellar plus David Bowie.
 4. Press **Review entity matches**. Inspect favourites and catalogue titles; press **Accept displayed sample matches**. “Real Qloo mode requires each candidate to be selected individually.”
 5. Press **Prepare reading draft**. Open **Evidence trail**. “These are synthetic tag-overlap calculations. The live adapter uses real search IDs and Qloo response order instead.”
-6. Exclude the first recommendation, choose Science fiction and press **Refine this draft**. Show that the excluded book is absent and that a short result set is reported honestly rather than padded.
+6. Exclude the first recommendation, choose Science fiction and press **Refine this draft**. Show that the excluded book is absent and that a short result set is reported honestly rather than padded. Only the current, unapproved draft can be refined; start a new list for changes after approval.
 7. Press **Approve reading list**. Download the CSV. Show its `sample` evidence column and the approved-list card. “The librarian controls the final list. We have not reserved books or contacted anyone.”
 8. Reload. The approved list persists.
 

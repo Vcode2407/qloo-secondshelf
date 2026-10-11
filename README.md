@@ -26,7 +26,7 @@ Open [http://127.0.0.1:4182](http://127.0.0.1:4182). The local Node application 
 2. Enter **one to three favourites**, with the correct movie, artist or book category. The sample briefing uses Interstellar and David Bowie. Other supported sample favourites include Spirited Away, Taylor Swift, Knives Out and the catalogue book titles.
 3. Review entity matches. Every favourite must have a reviewed match. Unknown names stay unresolved; edit them instead of silently accepting a fabricated ID. A catalogue title can be omitted. The sample-only “Accept displayed sample matches” button is an explicit action and never appears for real Qloo matches.
 4. Prepare a reading draft. Each sample recommendation shows its synthetic tag-fit evidence; a live recommendation shows actual Qloo result order and any returned affinity.
-5. Exclude a book, choose a category or change the list size. Refine the draft and review the replacement. Superseded drafts cannot be approved. Pending exclusions must be refined before approval.
+5. Exclude a book, choose a category or change the list size. Refine the current, unapproved draft and review the replacement. Superseded drafts cannot be approved or refined; approved drafts cannot be refined. Pending exclusions must be refined before approval. Prepare a new list to make changes after approval.
 6. Approve as the librarian and download CSV or the full saved evidence JSON. Reopen an approved list with **Review saved evidence**. Reviewed identities, entered queries, request IDs, result order and evidence trails persist across restarts. This saves a local reading list; it **does not reserve books, change stock, identify a patron or contact anyone**.
 
 See [DEMO.md](DEMO.md) for a short walkthrough and failure cases.
@@ -86,11 +86,13 @@ The saved evidence includes the normalized search candidates, reviewed selection
 
 `data/library.json` holds drafts and approved lists, including their reviewed selection, criteria and credential-free evidence. It is written atomically and preserves approved lists across a restart. Drafts are capped at 100 retained entries; pending match reviews are capped at 100 and expire after 30 minutes. Older live records without saved evidence are labelled incomplete and cannot be approved or refined; resolve and review a fresh draft. To reset a demonstration, stop the server and **rename** `data/` to a backup directory before restarting. Exported CSV labels its evidence mode and escapes formula-leading values.
 
+Replacing a local draft checks that it is still current when the replacement is saved, after any provider wait. Concurrent refinements persist only one replacement. If approval occurs during a pending refinement, approval remains saved and that refinement is rejected with HTTP 409. An already approved draft is rejected before another refinement/provider request.
+
 The local Node server binds to `127.0.0.1`, validates the local Host and browser Origin, accepts bounded JSON requests, and serves only an explicit static-file allowlist. Its JSON file store remains local. A separately reviewed [hosted Worker](hosting/README.md) uses browser-local saved records, signed review capsules, atomic D1 draft-state changes and explicit action/provider quotas. It is deployed owner-private; public audience and actual Qloo verification remain pending.
 
 ## Verification
 
-`npm test` runs **26 tests**: 20 local planner/provider tests plus 6 hosted capsule/workflow/quota regressions. They cover:
+`npm test` passes **31 tests**: 24 local planner/provider tests plus 7 hosted capsule/workflow/quota regressions. They cover:
 
 - Complete HTTP planning, explicit approval, CSV and persistence across a real server restart.
 - Mandatory reviewed IDs, unresolved favourites, inventory availability, category/exclusion refinements and superseded drafts.
@@ -99,6 +101,8 @@ The local Node server binds to `127.0.0.1`, validates the local Host and browser
 - Returned-ID validation, provider failures, no fabricated fallback, CSV formula protection and rejected external origins/hosts.
 - Conflicting candidate identities, duplicate catalogue mappings before insights, mismatched returned names and reviewed aliases.
 - Complete credential-free evidence, request IDs and reviewed identities retained through approval, JSON/CSV export, refinement and server restart; incomplete legacy live records cannot advance.
+- UTF-8 favourites preserved across transport chunks; malformed UTF-8 and malformed favourite rows rejected before provider requests in local and hosted routes.
+- Concurrent replacement conflicts and approval during a delayed refinement without an extra unreviewed draft.
 
 Provider fixtures are **stubs**, not live Qloo validation. Browser workflow checks are a separate verification step. The UI uses native form controls, visible keyboard focus, live status messages, labelled evidence and text-only rendering of backend/user content.
 

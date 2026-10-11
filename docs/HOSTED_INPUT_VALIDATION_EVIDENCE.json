@@ -1,0 +1,95 @@
+{
+  "verifiedAtUtc": "2026-10-11T12:33:38.202Z",
+  "origin": "https://secondshelf-library.viku355.chatgpt.site",
+  "access": "owner-private service access",
+  "mode": "sample",
+  "qlooConfigured": false,
+  "liveProviderRequested": false,
+  "providerCallsObserved": null,
+  "malformedSeedCases": [
+    {
+      "label": "null",
+      "status": 400
+    },
+    {
+      "label": "array",
+      "status": 400
+    },
+    {
+      "label": "string",
+      "status": 400
+    }
+  ],
+  "malformedUtf8Rejected": true,
+  "validLiteralReplacementCharacterPreserved": true,
+  "requests": [
+    {
+      "path": "/api/status",
+      "status": 200
+    },
+    {
+      "path": "/api/inventory",
+      "status": 200
+    },
+    {
+      "path": "/api/resolve",
+      "status": 400
+    },
+    {
+      "path": "/api/resolve",
+      "status": 400
+    },
+    {
+      "path": "/api/resolve",
+      "status": 400
+    },
+    {
+      "path": "/api/resolve",
+      "status": 400
+    },
+    {
+      "path": "/api/resolve",
+      "status": 200
+    },
+    {
+      "path": "/api/resolve",
+      "status": 200
+    },
+    {
+      "path": "/api/plans",
+      "status": 200
+    },
+    {
+      "path": "/api/refine",
+      "status": 200
+    },
+    {
+      "path": "/api/approve",
+      "status": 409
+    },
+    {
+      "path": "/api/approve",
+      "status": 200
+    },
+    {
+      "path": "/api/approve",
+      "status": 409
+    }
+  ],
+  "approvedTitles": [
+    "The Martian",
+    "A Wizard of Earthsea",
+    "The Hobbit"
+  ],
+  "excludedId": "dune",
+  "schemaVersion": 1,
+  "oldDraftAndReplayRejected": true,
+  "sourceSha": "f92fbca8792e81892442f3d3f2e185c4f40b55ff",
+  "savedVersionId": "appgprj_6aca7d5e0ae881919134c388de998984~appgver_ee6aeeb28954819188af8209d8210ebc",
+  "deploymentId": "appgdep_6acb81c2437481919af0ae439ad0aaef",
+  "deploymentStatus": "succeeded",
+  "deploymentUpdatedAtUtc": "2026-10-11T12:32:29.302720+00:00",
+  "envSetRevision": 1,
+  "hostedTestsPassed": 7,
+  "combinedTestsPassed": 31
+}

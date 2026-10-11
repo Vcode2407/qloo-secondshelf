@@ -11,7 +11,7 @@ async function input(request){
   let size=0;const chunks=[];const reader=request.body?.getReader();if(!reader)throw new AppError('Send a JSON object.');
   for(;;){const{done,value}=await reader.read();if(done)break;size+=value.length;if(size>140000){await reader.cancel();throw new AppError('This request exceeds the demo limit.',413);}chunks.push(value);}
   const bytes=new Uint8Array(size);let offset=0;for(const part of chunks){bytes.set(part,offset);offset+=part.length;}
-  let body;try{body=JSON.parse(new TextDecoder().decode(bytes));}catch{throw new AppError('Send a valid JSON object.');}
+  let body;try{body=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes));}catch{throw new AppError('Send a valid JSON object.');}
   if(!body||typeof body!=='object'||Array.isArray(body))throw new AppError('Send a JSON object.');return body;
 }
 export async function debit(db,bucket,limit,now=Date.now(),label='Qloo call'){

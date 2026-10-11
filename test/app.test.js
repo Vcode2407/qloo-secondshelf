@@ -178,3 +178,111 @@ test('legacy live drafts without reviewed evidence must be resolved again before
   }
   assert.equal(calls,0);assert.equal((await f.request('/api/lists')).result.lists.length,0);
 });
+
+test('malformed favourite rows return actionable errors before any provider request',async t=>{
+  let calls=0;
+  const f=await serverFixture(t,{key:'fixture-key',fetchImpl:async()=>{calls++;throw new Error('Invalid favourites must not reach a provider.');}});
+  for(const seed of [null,'Interstellar',[],{}, {name:null,type:'movie'}]){
+    const response=await f.request('/api/resolve',{...input,mode:'qloo',seedQueries:[seed]});
+    assert.equal(response.response.status,400);
+    assert.match(response.result.error,/Each favourite needs/);
+  }
+  assert.equal(calls,0);
+  assert.deepEqual((await f.request('/api/lists')).result,{drafts:[],lists:[]});
+});
+
+test('UTF-8 favourites survive transport boundaries and invalid byte sequences cannot reach Qloo',async t=>{
+  let calls=0;
+  const f=await serverFixture(t,{key:'fixture-only',fetchImpl:async()=>{calls++;throw new Error('Invalid request bodies must not reach Qloo.');}});
+  const name='Café favourite';
+  const payload={...input,seedQueries:[{name,type:'movie'}],inventoryIds:['dune']};
+  const encoded=Buffer.from(JSON.stringify(payload));
+  const split=encoded.indexOf(Buffer.from('é'))+1;
+  const result=await new Promise((resolve,reject)=>{
+    const request=httpRequest(f.running.url+'/api/resolve',{method:'POST',headers:{'Content-Type':'application/json'}},response=>{
+      let text='';response.setEncoding('utf8');response.on('data',chunk=>text+=chunk);response.on('end',()=>resolve({status:response.statusCode,body:JSON.parse(text)}));
+    });
+    request.on('error',reject);
+    // Wait for the first partial character to reach the server before sending
+    // its remaining bytes, avoiding timing-dependent packet coalescing.
+    f.running.server.once('request',incoming=>incoming.once('data',()=>request.end(encoded.subarray(split))));
+    request.write(encoded.subarray(0,split));
+  });
+  assert.equal(result.status,200);
+  assert.equal(result.body.results[0].query,name);
+
+  const malformed=Buffer.from(JSON.stringify({...payload,mode:'qloo'}));
+  malformed[malformed.indexOf(Buffer.from('é'))]=0xff;
+  const rejected=await new Promise((resolve,reject)=>{
+    const request=httpRequest(f.running.url+'/api/resolve',{method:'POST',headers:{'Content-Type':'application/json'}},response=>{
+      let text='';response.setEncoding('utf8');response.on('data',chunk=>text+=chunk);response.on('end',()=>resolve({status:response.statusCode,body:JSON.parse(text)}));
+    });
+    request.on('error',reject);request.end(malformed);
+  });
+  assert.equal(rejected.status,400);
+  assert.match(rejected.body.error,/valid JSON object/);
+  const literal='Caf\uFFFD favourite';
+  const validReplacement=await f.request('/api/resolve',{...payload,seedQueries:[{name:literal,type:'movie'}]});
+  assert.equal(validReplacement.response.status,200);
+  assert.equal(validReplacement.result.results[0].query,literal);
+  assert.equal((await f.request('/api/resolve',{...payload,mode:'qloo',padding:'é'.repeat(10000)})).response.status,413);
+  assert.equal(calls,0);
+});
+
+async function heldRefinementFixture(t){
+  let held=false,insightsCalls=0;
+  const waiting=[];
+  const f=await serverFixture(t,{key:'injected-fixture-only',fetchImpl:async(url)=>{
+    const target=new URL(url);
+    if(target.pathname==='/search'){
+      const name=target.searchParams.get('query');
+      const id=name==='Interstellar'?liveIds.interstellar:name==='Dune'?liveIds.dune:liveIds.martian;
+      return providerResponse({results:[{entity_id:id,name,types:[target.searchParams.get('types')]}]},'fixture-search');
+    }
+    insightsCalls++;
+    if(held)await new Promise(resolve=>waiting.push(resolve));
+    const ids=target.searchParams.get('filter.results.entities').split(',');
+    return providerResponse({results:{entities:ids.map(id=>({entity_id:id,name:id===liveIds.dune?'Dune':'The Martian',query:{affinity:.5}}))}},'fixture-insights');
+  }});
+  const first=(await plan(f,{mode:'qloo',seedQueries:[{name:'Interstellar',type:'movie'}],inventoryIds:['dune','martian']})).draft;
+  return{f,first,get insightsCalls(){return insightsCalls;},hold(){held=true;},release(){held=false;waiting.splice(0).forEach(resolve=>resolve());},async waitFor(count){
+    const deadline=Date.now()+3000;
+    while(waiting.length<count&&Date.now()<deadline)await new Promise(resolve=>setTimeout(resolve,5));
+    assert.equal(waiting.length,count,'The injected provider must hold all expected requests before the competing action.');
+  }};
+}
+
+test('concurrent provider-backed refinements can persist only one replacement draft',async t=>{
+  const fixture=await heldRefinementFixture(t);
+  fixture.hold();
+  const pending=[fixture.f.request('/api/refine',{draftId:fixture.first.id,limit:3}),fixture.f.request('/api/refine',{draftId:fixture.first.id,limit:5})];
+  try{await fixture.waitFor(2);}finally{fixture.release();}
+  const results=await Promise.all(pending);
+  assert.deepEqual(results.map(result=>result.response.status).sort(),[200,409]);
+  const saved=(await fixture.f.request('/api/lists')).result;
+  assert.equal(saved.drafts.length,2);
+  assert.equal(saved.drafts.find(draft=>draft.id===fixture.first.id).status,'superseded');
+  assert.equal(saved.drafts.filter(draft=>draft.status==='draft').length,1);
+  assert.equal(saved.lists.length,0);
+  assert.equal((await fixture.f.request('/api/approve',{draftId:fixture.first.id})).response.status,409);
+});
+
+test('approval during a pending refinement wins without creating an unreviewed replacement',async t=>{
+  const fixture=await heldRefinementFixture(t);
+  fixture.hold();
+  const pending=fixture.f.request('/api/refine',{draftId:fixture.first.id,limit:5});
+  let approval;
+  try{
+    await fixture.waitFor(1);
+    approval=await fixture.f.request('/api/approve',{draftId:fixture.first.id});
+    assert.equal(approval.response.status,200);
+  }finally{fixture.release();}
+  assert.equal((await pending).response.status,409);
+  const saved=(await fixture.f.request('/api/lists')).result;
+  assert.equal(saved.drafts.length,1);
+  assert.equal(saved.drafts[0].status,'approved');
+  assert.deepEqual(saved.lists,[approval.result.list]);
+  const callsBefore=fixture.insightsCalls;
+  assert.equal((await fixture.f.request('/api/refine',{draftId:fixture.first.id,limit:3})).response.status,409);
+  assert.equal(fixture.insightsCalls,callsBefore,'An approved draft must be rejected before another provider request.');
+});

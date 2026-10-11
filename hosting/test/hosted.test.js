@@ -33,6 +33,23 @@ test('public route boundaries reject foreign origins, invented offered IDs and m
   assert.equal((await call(env,'/api/resolve',{...briefing,mode:'qloo'})).status,409);
   assert.equal((await call(env,'/api/status')).qlooConfigured,false);
 });
+test('malformed favourite values return HTTP 400 before any provider request',async()=>{
+  const env=setup();env.QLOO_API_KEY='nonsecret-injected-test-key';let providerCalls=0;
+  for(const mode of ['sample','qloo'])for(const seed of [null,[],{},'Interstellar',42,true]){
+    const response=await handle(new Request('https://secondshelf.test/api/resolve',{method:'POST',headers:{Origin:'https://secondshelf.test','Content-Type':'application/json'},body:JSON.stringify({...briefing,mode,seedQueries:[seed]})}),env,{fetchImpl(){providerCalls++;throw new Error('Malformed input must not dispatch a provider request');}});
+    assert.equal(response.status,400,`${mode} mode must reject ${JSON.stringify(seed)}`);
+    assert.match((await response.json()).error,/Each favourite needs a name/);
+  }
+  const encoded=JSON.stringify({...briefing,mode:'qloo',seedQueries:[{name:'bad-byte-marker',type:'movie'}]});
+  const marker=encoded.indexOf('bad-byte-marker');
+  const raw=Buffer.concat([Buffer.from(encoded.slice(0,marker)),Buffer.from([0xff]),Buffer.from(encoded.slice(marker+'bad-byte-marker'.length))]);
+  const malformed=await handle(new Request('https://secondshelf.test/api/resolve',{method:'POST',headers:{Origin:'https://secondshelf.test','Content-Type':'application/json'},body:raw}),env,{fetchImpl(){providerCalls++;throw new Error('Invalid UTF-8 must not dispatch a provider request');}});
+  assert.equal(malformed.status,400);assert.match((await malformed.json()).error,/Send a valid JSON object/);
+  const literalName='Favourite \uFFFD title';
+  const valid=await call(env,'/api/resolve',{...briefing,seedQueries:[{name:literalName,type:'movie'}]});
+  assert.equal(valid.status,200);assert.equal(valid.results[0].query,literalName,'A valid literal replacement character must be preserved');
+  assert.equal(providerCalls,0);assert.equal(env.DB.drafts.size,0);
+});
 test('quota reserves failed attempts and rejects simultaneous work beyond the cap',async()=>{
   const db=new StubD1();const results=await Promise.allSettled(Array.from({length:8},()=>debit(db,'limited',3)));
   assert.equal(results.filter(row=>row.status==='fulfilled').length,3);assert.equal(results.filter(row=>row.status==='rejected').length,5);

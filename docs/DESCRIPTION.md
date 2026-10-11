@@ -50,7 +50,7 @@ The adapter bounds calls and timeouts. Provider failures, unknown or duplicate r
 
 ## Accomplishments and learning
 
-The local product is complete enough to prepare, refine, approve, export, and reopen a reading list. The recorded automated suite contains 20 passing tests covering the actual HTTP workflow, restart persistence, reviewed identities, provider boundaries, provenance, exports, refinements, and recovery. Syntax checks pass.
+The local product is complete enough to prepare, refine, approve, export, and reopen a reading list. The current automated suite contains 31 passing tests: 24 root application tests and 7 hosted capsule/workflow/quota regressions. They cover the actual HTTP workflow, restart persistence, reviewed identities, provider boundaries, provenance, exports, refinements, and recovery. UTF-8 favourites survive transport chunks, while malformed UTF-8 and malformed favourite rows are rejected before provider requests in both local and hosted routes. The root checks also cover atomic replacement/approval conflicts during delayed refinements. Approved drafts cannot be refined; changes require a new list. Syntax checks pass.
 
 The implementation demonstrates that agentic orchestration can be deterministic and still carry out a meaningful sequence of tools and decisions. It also shows why recommendation provenance needs the reviewed identity and actual returned order, not just a score next to a title.
 

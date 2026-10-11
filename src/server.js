@@ -9,7 +9,14 @@ import { Qloo } from './qloo.js';
 import { Planner } from './planner.js';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 function json(res,status,data){res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'});res.end(JSON.stringify(data));}
-async function body(req){if(!req.headers['content-type']?.startsWith('application/json'))throw new AppError('Send application/json requests.',415);let text='';for await(const part of req){text+=part;if(Buffer.byteLength(text)>20000)throw new AppError('This request is too large.',413);}try{const parsed=JSON.parse(text);if(!parsed||typeof parsed!=='object'||Array.isArray(parsed))throw new Error();return parsed;}catch{throw new AppError('Send a valid JSON object.');}}
+async function body(req){
+  if(!req.headers['content-type']?.startsWith('application/json'))throw new AppError('Send application/json requests.',415);
+  const chunks=[];let bytes=0;
+  for await(const part of req){bytes+=part.length;if(bytes>20000)throw new AppError('This request is too large.',413);chunks.push(part);}
+  // Decode the complete bounded body so a character split across transport
+  // chunks is preserved, and malformed UTF-8 never becomes provider evidence.
+  try{const parsed=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(Buffer.concat(chunks)));if(!parsed||typeof parsed!=='object'||Array.isArray(parsed))throw new Error();return parsed;}catch{throw new AppError('Send a valid JSON object.');}
+}
 export async function startServer({port=4182,key='',dataFile=resolve(root,'data/library.json'),fetchImpl}={}){
   if(!Number.isInteger(port)||port<0||port>65535)throw new Error('PORT must be an integer from 0 to 65535.');
   const store=new Store(dataFile);const planner=new Planner({store,qloo:new Qloo({key,fetchImpl})});let actualPort;
