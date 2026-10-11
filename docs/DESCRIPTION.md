@@ -50,7 +50,7 @@ The adapter bounds calls and timeouts. Provider failures, unknown or duplicate r
 
 ## Accomplishments and learning
 
-The local product is complete enough to prepare, refine, approve, export, and reopen a reading list. The current automated suite contains 31 passing tests: 24 root application tests and 7 hosted capsule/workflow/quota regressions. They cover the actual HTTP workflow, restart persistence, reviewed identities, provider boundaries, provenance, exports, refinements, and recovery. UTF-8 favourites survive transport chunks, while malformed UTF-8 and malformed favourite rows are rejected before provider requests in both local and hosted routes. The root checks also cover atomic replacement/approval conflicts during delayed refinements. Approved drafts cannot be refined; changes require a new list. Syntax checks pass.
+The local product is complete enough to prepare, refine, approve, export, and reopen a reading list. The current automated suite contains 39 passing tests: 26 root application tests and 13 hosted capsule/workflow/quota/provider-stream regressions. They cover the actual HTTP workflow, restart persistence, reviewed identities, provider boundaries, provenance, exports, refinements, and recovery. UTF-8 favourites survive transport chunks, while malformed UTF-8 and malformed favourite rows are rejected before provider requests in both local and hosted routes. Both provider adapters enforce a 1,500,000-byte streamed-response cap, cancel oversized bodies before reading their remaining tail, and decode UTF-8 strictly. Injected tests cover split characters, a valid literal replacement character, the exact limit, sanitized stream failures and preserved hosted quota HTTP 429; they do not prove live Qloo use. The root checks also cover atomic replacement/approval conflicts during delayed refinements. Approved drafts cannot be refined; changes require a new list. Syntax checks pass.
 
 The implementation demonstrates that agentic orchestration can be deterministic and still carry out a meaningful sequence of tools and decisions. It also shows why recommendation provenance needs the reviewed identity and actual returned order, not just a score next to a title.
 
@@ -84,7 +84,7 @@ For a later verified live demo, replace the sample resolution/ranking scene with
 | Project name and tagline | SecondShelf; draft above. |
 | English product description | Draft above; review before pasting. |
 | Built with | JavaScript, Node.js, HTML/CSS, deterministic orchestration, local JSON; Qloo search/Insights adapter implemented, live use pending. |
-| Public licensed repository | URL pending; MIT license, lockfile, setup and tests exist locally. |
+| Public licensed repository | https://github.com/Vcode2407/qloo-secondshelf; MIT license, lockfile, root and hosted source, setup and tests are available. |
 | External functional demo | URL and reviewed public credential/quota handling pending. Local `http://127.0.0.1:4182` is not a public demo link. |
 | Real Qloo access and runtime evidence | Event key, actual calls, reviewed entity/edition matches, coverage, quotas, and redacted provenance pending. |
 | Judge access | Arrange free usable access through November 16, 2026, 11:45 pm EST / November 17, 10:15 am IST. |
@@ -93,4 +93,4 @@ For a later verified live demo, replace the sample resolution/ranking scene with
 | Entrant/team eligibility and rights | Human verification pending. |
 | Devpost project/submission URL | Pending; no submitted entry is claimed. |
 
-Deadline: **October 30, 2026, 11:45 pm EDT / October 31, 9:15 am IST**. The remaining actual Qloo, public-demo, repository, and submission gates are tracked in [SUBMISSION.md](../SUBMISSION.md). See the [official rules](https://qloo.devpost.com/rules), [schedule](https://qloo.devpost.com/details/dates), and [event developer guide](https://docs.qloo.com/reference/qloo-llm-hackathon-developer-guide) before final submission.
+Deadline: **October 30, 2026, 11:45 pm EDT / October 31, 9:15 am IST**. The remaining actual Qloo, public-demo and submission gates are tracked in [SUBMISSION.md](../SUBMISSION.md). See the [official rules](https://qloo.devpost.com/rules), [schedule](https://qloo.devpost.com/details/dates), and [event developer guide](https://docs.qloo.com/reference/qloo-llm-hackathon-developer-guide) before final submission.

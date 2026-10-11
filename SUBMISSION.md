@@ -8,6 +8,7 @@ Deadline: **October 31, 2026, 9:15 am IST** (October 30, 11:45 pm EDT). [Officia
 - [x] Clearly labelled synthetic sample data; no fabricated Qloo scores.
 - [x] Real Qloo search/Insights adapter with reviewed IDs, provenance and recoverable errors.
 - [x] Backend-only credential handling and bounded explicit calls.
+- [x] Native and hosted streamed-response byte caps, early cancellation and strict UTF-8 handling; 39 local/injected regressions pass. These checks do not verify live Qloo access.
 - [x] MIT license, reproducible setup, lockfile, demo walkthrough and meaningful tests.
 - [x] Submit the event API-key request with participant-approved use agreement and rules; receipt confirmed October 10, 2026.
 - [x] Deploy the reviewed hosted Worker with signed review capsules, atomic draft-state transitions, credential-free browser assets and conservative action/provider quotas. Repaired native deployment succeeded October 11; audience remains owner-private. [Actual private cloud sample workflow](docs/HOSTED_EVIDENCE.md) passed, including superseded/repeated-approval rejection.

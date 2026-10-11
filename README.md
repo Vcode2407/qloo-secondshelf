@@ -64,6 +64,8 @@ The [book parameter guide](https://docs.qloo.com/reference/available-parameters-
 
 Resolution performs at most **9 searches** (3 favourites + 6 catalogue books), with 8-second per-call deadlines and an approximately 30-second aggregate limit. Draft preparation or explicit refinement performs one insights request. There is no automatic polling, retry, paid LLM call or live-call fallback. Actual provider errors, unknown/duplicate returned catalogue IDs, malformed responses and empty results stop the action with a recoverable message. They never become synthetic “Qloo” results. Numeric event quota limits and eventual entity coverage need verification with the issued key.
 
+The native and hosted adapters read provider responses with a **1,500,000-byte streaming limit** and cancel an oversized response before buffering the remaining body. They preserve valid UTF-8 across chunk boundaries and reject malformed UTF-8. The hosted adapter also preserves HTTP 429 from its quota-aware request wrapper. These checks use injected responses; they do not establish live Qloo access or coverage.
+
 ## How the agentic workflow operates
 
 The deterministic orchestrator executes resolution → human match review → available-inventory grounding → ranking → refinement → librarian approval → export. A retained resolution expires after 30 minutes. The backend validates choices against the exact offered candidates rather than trusting browser-supplied entity IDs. The live adapter preserves Qloo response order rather than sorting or inventing a score. This build does **not** use an LLM or claim natural-language model reasoning; Qloo's rules permit an agentic-tool path.
@@ -92,7 +94,7 @@ The local Node server binds to `127.0.0.1`, validates the local Host and browser
 
 ## Verification
 
-`npm test` passes **31 tests**: 24 local planner/provider tests plus 7 hosted capsule/workflow/quota regressions. They cover:
+`npm test` passes **39 tests**: 26 local planner/provider tests plus 13 hosted capsule/workflow/quota/provider-stream regressions. They cover:
 
 - Complete HTTP planning, explicit approval, CSV and persistence across a real server restart.
 - Mandatory reviewed IDs, unresolved favourites, inventory availability, category/exclusion refinements and superseded drafts.
@@ -102,6 +104,8 @@ The local Node server binds to `127.0.0.1`, validates the local Host and browser
 - Conflicting candidate identities, duplicate catalogue mappings before insights, mismatched returned names and reviewed aliases.
 - Complete credential-free evidence, request IDs and reviewed identities retained through approval, JSON/CSV export, refinement and server restart; incomplete legacy live records cannot advance.
 - UTF-8 favourites preserved across transport chunks; malformed UTF-8 and malformed favourite rows rejected before provider requests in local and hosted routes.
+- Provider-response byte limits, cancellation before an unread oversized tail, exact-limit acceptance, split UTF-8 decoding, invalid-byte rejection and preservation of valid replacement characters in native and hosted adapters.
+- Sanitized hosted stream/cancellation failures and preservation of quota HTTP 429 without substituting sample data.
 - Concurrent replacement conflicts and approval during a delayed refinement without an extra unreviewed draft.
 
 Provider fixtures are **stubs**, not live Qloo validation. Browser workflow checks are a separate verification step. The UI uses native form controls, visible keyboard focus, live status messages, labelled evidence and text-only rendering of backend/user content.

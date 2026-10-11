@@ -2,9 +2,27 @@ import { AppError } from './store.js';
 const BASE='https://hackathon.api.qloo.com';
 const uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i;
 export const normalizeEntityName=name=>name.normalize('NFKC').trim().replace(/\s+/g,' ').toLowerCase();
+async function readProviderJson(response){
+  const reader=response.body?.getReader();
+  if(!reader)throw new AppError('Qloo returned invalid JSON.',502);
+  const chunks=[];let size=0;
+  try{
+    for(;;){
+      const {done,value}=await reader.read();if(done)break;
+      size+=value.byteLength;
+      if(size>1500000)throw new AppError('Qloo returned too much data for this small request.',502);
+      chunks.push(value);
+    }
+    const bytes=new Uint8Array(size);let offset=0;
+    for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.byteLength;}
+    try{return JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes));}
+    catch{throw new AppError('Qloo returned invalid JSON.',502);}
+  }catch(error){if(error instanceof AppError)throw error;throw new AppError('Qloo could not be reached within the request limit. No sample data was substituted.',502);}
+  finally{await reader.cancel().catch(()=>{});}
+}
 export class Qloo {
   constructor({key='',fetchImpl=fetch,timeout=8000}={}){this.key=key.trim();this.fetch=fetchImpl;this.timeout=timeout;}
-  async get(path,parameters){if(!this.key)throw new AppError('No event Qloo key is configured. Choose sample mode or add a key to the local .env file.',409);const url=new URL(path,BASE);for(const [key,value]of Object.entries(parameters))url.searchParams.set(key,String(value));let response;try{response=await this.fetch(url,{headers:{'X-Api-Key':this.key,Accept:'application/json'},signal:AbortSignal.timeout(this.timeout),redirect:'error'});}catch{throw new AppError('Qloo could not be reached within the request limit. No sample data was substituted.',502);}if(!response.ok)throw new AppError(response.status===429?'Qloo quota or rate limit reached. Wait before trying again.':response.status===401||response.status===403?'Qloo rejected this event credential or entity type. Check your hackathon access.':'Qloo returned an error. Try again later; no sample results were substituted.',502);const raw=await response.text();if(raw.length>1500000)throw new AppError('Qloo returned too much data for this small request.',502);let body;try{body=JSON.parse(raw);}catch{throw new AppError('Qloo returned invalid JSON.',502);}return {body,request:{endpoint:`${BASE}${path}`,parameters},requestId:response.headers.get('x-request-id')||null};}
+  async get(path,parameters){if(!this.key)throw new AppError('No event Qloo key is configured. Choose sample mode or add a key to the local .env file.',409);const url=new URL(path,BASE);for(const [key,value]of Object.entries(parameters))url.searchParams.set(key,String(value));let response;try{response=await this.fetch(url,{headers:{'X-Api-Key':this.key,Accept:'application/json'},signal:AbortSignal.timeout(this.timeout),redirect:'error'});}catch{throw new AppError('Qloo could not be reached within the request limit. No sample data was substituted.',502);}if(!response.ok)throw new AppError(response.status===429?'Qloo quota or rate limit reached. Wait before trying again.':response.status===401||response.status===403?'Qloo rejected this event credential or entity type. Check your hackathon access.':'Qloo returned an error. Try again later; no sample results were substituted.',502);const body=await readProviderJson(response);return {body,request:{endpoint:`${BASE}${path}`,parameters},requestId:response.headers.get('x-request-id')||null};}
   async search(name,type){
     const result=await this.get('/search',{query:name,types:`urn:entity:${type}`,take:3});
     const rows=Array.isArray(result.body.results)?result.body.results:result.body.results?.entities??result.body.entities;
